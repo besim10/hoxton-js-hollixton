@@ -2,6 +2,7 @@
     --blue: #304064;
     --white: #ffffff;
     --light-blue: #1477b2;
+    --light-gray: #eeeeee;
 }
 
 *{
@@ -19,17 +20,18 @@ body{
     font-weight: bold;
     display: grid;
     grid-template-rows: 70px 1fr 70px;
-    padding: 0rem 1rem;
+    
     background-color: var(--white);
     color: var(--blue);
 }
-h1{
+h1, h4{
     font-family: 'Oswald', sans-serif;
 }
 header{
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
+    padding: 0rem 1rem;
 }
 .header-Nav{
     display: grid;
@@ -54,7 +56,9 @@ header{
 .right-menu-header .icons{
     width: 25px;
 }
-
+main{
+    padding: 0rem 1rem;
+}
 .article-list{
     display: grid;
     grid-template-columns: repeat( 4, 1fr);
@@ -81,5 +85,14 @@ header{
 }
 footer{
     display: grid;
-    background-color: rgb(255, 191, 191);
+    background-color: var(--light-gray);
+    justify-content: space-between;
+    grid-auto-flow: column;
+    align-items: center;
+    padding: 0rem 1rem;
+}
+.footer h5{
+    
+    display: grid;
+    justify-self: end;
 }

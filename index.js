@@ -97,6 +97,7 @@ function renderMain(){
     
         const productPriceEl = document.createElement('h4')
         productPriceEl.textContent = `£${card.price}`
+        productPriceEl.style.fontFamily = 'sans-serif'
 
         ulListEl.append(listItem)
         listItem.append(newProductEl, descriptionEl)
@@ -112,9 +113,16 @@ function renderMain(){
 
 function renderFooter(){
     const footerEl = document.createElement('footer')
-    footerEl.textContent = 'Footer here!'
+
+    const logoh4El = document.createElement('h4')
+    logoh4El.textContent = 'HOLLIXTON'
+
+    const infoEl = document.createElement('h5')
+    infoEl.textContent = 'United Kingdom'
+
 
     document.body.append(footerEl)
+    footerEl.append(logoh4El, infoEl)
 }
 function render(){
     document.body.innerHTML = ''
