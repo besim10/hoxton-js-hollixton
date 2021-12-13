@@ -1,5 +1,18 @@
 
-const state = {}
+const state = {
+    store: []
+}
+
+
+function fetchDataFromServer(){
+    return fetch('http://localhost:3000/store').then(resp => resp.json())
+}
+fetchDataFromServer().then(function (resp){
+    state.store = resp
+    render()
+})
+
+
 
 function renderHeader(){
 
@@ -53,10 +66,50 @@ function renderHeader(){
 }
 function renderMain(){
     const mainEl = document.createElement('main')
-    mainEl.textContent = 'Main here!'
+    
+    const titleEl = document.createElement('h2')
+    titleEl.textContent = 'Home'
 
+    const articleEl = document.createElement('article')
+    articleEl.setAttribute('class','article')
+
+    const ulListEl = document.createElement('ul')
+    ulListEl.setAttribute('class','article-list')
+
+    ulListEl.innerHTML = ''
+
+    for(const card of state.store){
+
+        const listItem = document.createElement('li')
+        listItem.setAttribute('class','article-list-item')
+    
+        const newProductEl = document.createElement('span')
+        newProductEl.setAttribute('class','newProduct')
+        newProductEl.textContent = 'NEW!'
+    
+        const descriptionEl = document.createElement('div')
+        descriptionEl.setAttribute('class','article-list-item--description')
+        const imageEl = document.createElement('img')
+        imageEl.setAttribute('src', card.image)
+        
+        const productTitleEl = document.createElement('h3')
+        productTitleEl.textContent = card.name
+    
+        const productPriceEl = document.createElement('h4')
+        productPriceEl.textContent = `£${card.price}`
+
+        ulListEl.append(listItem)
+        listItem.append(newProductEl, descriptionEl)
+        descriptionEl.append(imageEl,productTitleEl,productPriceEl)
+    }
+    
     document.body.append(mainEl)
+    mainEl.append(titleEl, articleEl)
+    articleEl.append(ulListEl)
+    
 }
+
+
 function renderFooter(){
     const footerEl = document.createElement('footer')
     footerEl.textContent = 'Footer here!'
@@ -64,6 +117,7 @@ function renderFooter(){
     document.body.append(footerEl)
 }
 function render(){
+    document.body.innerHTML = ''
     renderHeader()
     renderMain()
     renderFooter() 

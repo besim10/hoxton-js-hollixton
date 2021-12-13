@@ -1,9 +1,9 @@
 :root{
     --blue: #304064;
     --white: #ffffff;
+    --light-blue: #1477b2;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
 *{
     margin: 0;
     padding: 0;
@@ -13,15 +13,18 @@
 img{
     width: 100%;
 }
+
 body{
-    font-family: 'Fjalla One', sans-serif;
+    font-family: sans-serif;
     font-weight: bold;
     display: grid;
     grid-template-rows: 70px 1fr 70px;
-    height: 100vh;
     padding: 0rem 1rem;
     background-color: var(--white);
     color: var(--blue);
+}
+h1{
+    font-family: 'Oswald', sans-serif;
 }
 header{
     display: grid;
@@ -46,13 +49,35 @@ header{
 }
 .right-menu-header{
     justify-content: flex-end;
+    gap: 1rem;
 }
 .right-menu-header .icons{
     width: 25px;
 }
-main{
+
+.article-list{
     display: grid;
-    background-color: rgb(208, 255, 202);
+    grid-template-columns: repeat( 4, 1fr);
+    list-style: none;
+    place-items: center;
+    gap: 1rem;
+}
+.article-list-item{
+    display: grid;
+    grid-auto-flow: row;
+}
+.newProduct{
+    background-color: var(--light-blue);
+    display: grid;
+    color: var(--white);
+    font-size: 0.8rem;
+    justify-self: right;
+    padding: 0.2rem;
+}
+.article-list-item--description{
+    display: grid;
+    gap: 0.5rem;
+    color: var(--blue)
 }
 footer{
     display: grid;
