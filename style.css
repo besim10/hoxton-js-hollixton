@@ -1,16 +1,54 @@
+:root{
+    --blue: #304064;
+    --white: #ffffff;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
+}
+img{
+    width: 100%;
 }
 body{
+    font-family: 'Fjalla One', sans-serif;
+    font-weight: bold;
     display: grid;
     grid-template-rows: 70px 1fr 70px;
     height: 100vh;
+    padding: 0rem 1rem;
+    background-color: var(--white);
+    color: var(--blue);
 }
 header{
     display: grid;
-    background-color: rgb(222, 187, 255);
+    grid-template-columns: auto 1fr;
+    align-items: center;
+}
+.header-Nav{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+.menu-header{
+    list-style: none;
+    display: grid;
+    grid-auto-flow: column;
+}
+.menu-header li {
+    padding: 1rem;
+}
+.left-menu-header{
+    justify-content: flex-start;
+}
+.right-menu-header{
+    justify-content: flex-end;
+}
+.right-menu-header .icons{
+    width: 25px;
 }
 main{
     display: grid;
