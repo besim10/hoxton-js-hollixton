@@ -19,8 +19,8 @@ body{
     font-family: sans-serif;
     font-weight: bold;
     display: grid;
+    gap: 0.5rem;
     grid-template-rows: 70px 1fr 70px;
-    
     background-color: var(--white);
     color: var(--blue);
 }
@@ -59,7 +59,7 @@ header{
 main{
     padding: 0rem 1rem;
     display: grid;
-    gap: 1.5rem;
+    gap: 1.2rem;
 }
 .product-list{
     display: grid;
@@ -71,6 +71,7 @@ main{
     display: grid;
     gap: 0.2rem;
     position: relative;
+    cursor: pointer;
 }
 .product-item__new{
     background-color: var(--light-blue);
@@ -96,6 +97,28 @@ main{
 .product-item__discounted-price{
     color: red;
 }
+
+.main-selected-product{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+    height: auto;
+}
+.selected-product__image{
+    width: 478px;
+}
+.selected-product__title{
+    font-weight: 800;
+}
+.selected-product__button{
+    margin-top: 0.5rem;
+    color: var(--white);
+    background-color: var(--light-blue);
+    padding: 1rem;
+    border: none;
+    border-radius: 2rem;
+    font-weight: bold;
+}
 footer{
     display: grid;
     background-color: var(--light-gray);
@@ -105,7 +128,7 @@ footer{
     padding: 0rem 1rem;
 }
 .footer h5{
-    
     display: grid;
     justify-self: end;
 }
+
