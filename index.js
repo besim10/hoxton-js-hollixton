@@ -1,39 +1,104 @@
 
 const state = {
-    store: []
+    store: [],
+    tab: ''
 }
 
+//server function
 
-function fetchDataFromServer(){
+function getDataFromServer(){
     return fetch('http://localhost:3000/store').then(resp => resp.json())
 }
-fetchDataFromServer().then(function (resp){
-    state.store = resp
-    render()
-})
 
+//Helper functions
+function isItemNew(product) {
+    const daysToConsider = 11
+  
+    // check how many ms are there in 10 days
+    const second = 1000
+    const minute = second * 60
+    const hour = minute * 60
+    const day = hour * 24
+  
+    const msForTenDaysAgo = Date.now() - day * daysToConsider
+  
+    // get ms for current product
+    const msForProductDate = Date.parse(product.dateEntered)
+  
+    // check if the product ms is more recent than 10 days ago
+    return msForProductDate > msForTenDaysAgo
+}
 
+function getProductsToDisplay(){
 
+    let copyOfStateStore = state.store
+    
+    let productsToDisplay = copyOfStateStore.filter(product => product.type.includes(state.tab))
+
+    if(state.tab === 'Sale'){
+        productsToDisplay = copyOfStateStore.filter(product => product.discountedPrice)
+    }
+    
+    
+    return productsToDisplay
+}
+
+function listenToLeftMenuHeader(logoH1El, aTagGirlsEl, aTagGuysEl, aTagSaleEl){
+    logoH1El.addEventListener('click',function(event){
+        event.preventDefault()
+        state.tab = ''
+        render()
+    })
+    
+    aTagGirlsEl.addEventListener('click',function(event){
+        event.preventDefault()
+        state.tab = aTagGirlsEl.textContent
+        render()
+    })
+
+    aTagGuysEl.addEventListener('click',function(event){
+        event.preventDefault()
+        state.tab = aTagGuysEl.textContent
+        render()
+    })
+
+    aTagSaleEl.addEventListener('click',function(event){
+        event.preventDefault()
+        state.tab = aTagSaleEl.textContent
+        render()
+    })
+}
 function renderHeader(){
 
     const headerEl = document.createElement('header')
     
     const logoH1El = document.createElement('h1')
+    logoH1El.setAttribute('class','header-logo')
     logoH1El.textContent = 'HOLLIXTON'
 
     const navEl = document.createElement('nav')
-    navEl.setAttribute('class','header-Nav')
+    navEl.setAttribute('class','header-nav')
 
     const leftMenu = document.createElement('ul')
     leftMenu.classList.add('menu-header')
     leftMenu.classList.add('left-menu-header')
 
     const listItemGirls = document.createElement('li')
-    listItemGirls.textContent = 'Girls'
-    const listItemBoys = document.createElement('li')
-    listItemBoys.textContent = 'Guys'
+    listItemGirls.setAttribute('class','left-menu-header__item')
+    const aTagGirlsEl = document.createElement('a')
+    aTagGirlsEl.textContent = 'Girls'
+
+    const listItemGuys = document.createElement('li')
+    listItemGuys.setAttribute('class','left-menu-header__item')
+    const aTagGuysEl = document.createElement('a')
+    aTagGuysEl.textContent = 'Guys'
+
     const listItemSale = document.createElement('li')
-    listItemSale.textContent = 'Sale'
+    listItemSale.setAttribute('class','left-menu-header__item')
+    const aTagSaleEl = document.createElement('a')
+    aTagSaleEl.textContent = 'Sale'
+
+    listenToLeftMenuHeader(logoH1El, aTagGirlsEl, aTagGuysEl, aTagSaleEl)
 
     const rightMenu = document.createElement('ul')
     rightMenu.classList.add('menu-header')
@@ -57,59 +122,79 @@ function renderHeader(){
     document.body.append(headerEl)
     headerEl.append(logoH1El,navEl)
     navEl.append(leftMenu,rightMenu)
-    leftMenu.append(listItemGirls,listItemBoys,listItemSale)
+    leftMenu.append(listItemGirls,listItemGuys,listItemSale)
     rightMenu.append(listItemSearch, listItemProf, listItemBag)
     listItemSearch.append(searchImg)
     listItemProf.append(personImg)
     listItemBag.append(bagImg)
+    listItemGirls.append(aTagGirlsEl)
+    listItemGuys.append(aTagGuysEl)
+    listItemSale.append(aTagSaleEl)
 
 }
+function renderStoreItem(product, ulListEl){
+
+
+    const listItem = document.createElement('li')
+        listItem.setAttribute('class','product-item')
+    
+        const imageEl = document.createElement('img')
+        imageEl.setAttribute('class','product-item__image')
+        imageEl.setAttribute('alt', product.name)
+        imageEl.setAttribute('src', product.image)
+
+        
+        const productTitleEl = document.createElement('h3')
+        productTitleEl.setAttribute('class','product-item__title')
+        productTitleEl.textContent = product.name
+
+        const priceEl = document.createElement('p')
+        priceEl.setAttribute('class','product-item__price')
+        
+        const fullPriceEl = document.createElement('span')
+        fullPriceEl.setAttribute('class','product-item__full-price')
+        fullPriceEl.textContent = `£${product.price}`
+
+        priceEl.append(fullPriceEl)
+
+        if(product.discountedPrice){
+
+            fullPriceEl.classList.add('discounted-price')
+            const discountedPriceEl = document.createElement('span')
+            discountedPriceEl.setAttribute('class','product-item__discounted-price')
+            discountedPriceEl.textContent = `£${product.discountedPrice}`
+            
+            priceEl.append(discountedPriceEl)
+        }
+        listItem.append(imageEl, productTitleEl, priceEl)
+        
+
+        if (isItemNew(product)){
+            const newProductEl = document.createElement('span')
+            newProductEl.setAttribute('class','product-item__new')
+            newProductEl.textContent = 'NEW!'
+            listItem.append(newProductEl)
+        }
+        ulListEl.append(listItem)
+}
 function renderMain(){
+
     const mainEl = document.createElement('main')
     
     const titleEl = document.createElement('h2')
     titleEl.textContent = 'Home'
 
-    const articleEl = document.createElement('article')
-    articleEl.setAttribute('class','article')
-
     const ulListEl = document.createElement('ul')
-    ulListEl.setAttribute('class','article-list')
+    ulListEl.setAttribute('class','product-list')
 
-    ulListEl.innerHTML = ''
+    let productsToDisplay = getProductsToDisplay()
 
-    for(const card of state.store){
-
-        const listItem = document.createElement('li')
-        listItem.setAttribute('class','article-list-item')
-    
-        const newProductEl = document.createElement('span')
-        newProductEl.setAttribute('class','newProduct')
-        newProductEl.textContent = 'NEW!'
-    
-        const descriptionEl = document.createElement('div')
-        descriptionEl.setAttribute('class','article-list-item--description')
-        const imageEl = document.createElement('img')
-        imageEl.setAttribute('src', card.image)
-        
-        const productTitleEl = document.createElement('h3')
-        productTitleEl.textContent = card.name
-    
-        const productPriceEl = document.createElement('h4')
-        productPriceEl.textContent = `£${card.price}`
-        productPriceEl.style.fontFamily = 'sans-serif'
-
-        ulListEl.append(listItem)
-        listItem.append(newProductEl, descriptionEl)
-        descriptionEl.append(imageEl,productTitleEl,productPriceEl)
+    for(const product of productsToDisplay){
+        renderStoreItem(product,ulListEl)
     }
-    
     document.body.append(mainEl)
-    mainEl.append(titleEl, articleEl)
-    articleEl.append(ulListEl)
-    
+    mainEl.append(titleEl,ulListEl)   
 }
-
 
 function renderFooter(){
     const footerEl = document.createElement('footer')
@@ -130,4 +215,13 @@ function render(){
     renderMain()
     renderFooter() 
 }
-render()
+
+
+function init(){
+    render()
+    getDataFromServer().then(function(dataFromServer){
+        state.store = dataFromServer
+        render()
+    })
+}
+init()
