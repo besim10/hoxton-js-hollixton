@@ -131,7 +131,12 @@ function renderHeader() {
     const personImg = document.createElement('img')
     personImg.setAttribute('class', 'icons')
     personImg.setAttribute('src', 'icons/person-icon.svg')
+    listItemProf.addEventListener('click',function(){
+        state.modal = 'profile'
 
+        render()
+    })
+    
     const listItemBag = document.createElement('li')
     const bagImg = document.createElement('img')
     bagImg.setAttribute('class', 'icons')
@@ -151,7 +156,6 @@ function renderHeader() {
 
 }
 function renderStoreItem(product, ulListEl) {
-
 
     const listItem = document.createElement('li')
     listItem.setAttribute('class', 'product-item')
@@ -222,7 +226,10 @@ function renderSelectedProduct() {
     const buttonEl = document.createElement('button')
     buttonEl.setAttribute('class', 'selected-product__button')
     buttonEl.textContent = 'ADD TO BAG'
-
+    buttonEl.addEventListener('click',function(){
+        state.selectedProduct = null
+        render()
+    })
     mainEl.append(imageEl, productInfoEl)
     productInfoEl.append(titleEl, buttonEl)
 
@@ -231,22 +238,20 @@ function renderSelectedProduct() {
 function renderSearchModal(mainEl){
 
     const searchModalWrapperEl = document.createElement('div')
-    searchModalWrapperEl.classList.add('modal')
-    searchModalWrapperEl.classList.add('search-modal-wrapper')
+    searchModalWrapperEl.classList.add('modal-wrapper')
     searchModalWrapperEl.addEventListener('click',function(){
         state.modal = ''
         render()
     })
 
     const searchModalEl = document.createElement('div')
-    searchModalEl.classList.add('modal')
-    searchModalEl.classList.add('search-modal')
+    searchModalEl.classList.add('modal-container')
     searchModalEl.addEventListener('click',function(event){
         event.stopPropagation()
     })
     
     const closeButtonEl = document.createElement('button')
-    closeButtonEl.setAttribute('class','search-modal__close-button')
+    closeButtonEl.setAttribute('class','modal__close-button')
     closeButtonEl.textContent = 'X'
     closeButtonEl.addEventListener('click',function(){
         state.modal = ''
@@ -262,7 +267,7 @@ function renderSearchModal(mainEl){
     const inputEl = document.createElement('input')
     inputEl.setAttribute('type','text')
     inputEl.setAttribute('name','search')
-    inputEl.setAttribute('class','search-modal__input')
+    inputEl.setAttribute('class','input')
     inputEl.setAttribute('placeholder','Search...')
 
     formEl.addEventListener('submit', function(event){
@@ -278,6 +283,75 @@ function renderSearchModal(mainEl){
     searchModalWrapperEl.append(searchModalEl)
     searchModalEl.append(closeButtonEl,titleH2El, formEl)
     formEl.append(inputEl)
+}
+function renderProfileModal(mainEl){
+
+    const profileModalWrapperEl = document.createElement('div')
+    profileModalWrapperEl.classList.add('modal-wrapper')
+    profileModalWrapperEl.addEventListener('click',function(){
+        state.modal = ''
+        render()
+    })
+
+    const profileModalEl = document.createElement('div')
+    profileModalEl.classList.add('modal-container')
+    profileModalEl.addEventListener('click',function(event){
+        event.stopPropagation()
+    })
+    
+    const closeButtonEl = document.createElement('button')
+    closeButtonEl.setAttribute('class','modal__close-button')
+    closeButtonEl.textContent = 'X'
+    closeButtonEl.addEventListener('click',function(){
+        state.modal = ''
+        render()
+    })
+
+    const titleH2El = document.createElement('h2')
+    titleH2El.textContent = 'Sign In'
+
+    const formEl = document.createElement('form')
+    formEl.setAttribute('class','profile-form')
+    
+    const emailLabelEl = document.createElement('label')
+    emailLabelEl.setAttribute('for','email')
+    emailLabelEl.textContent = 'Email'
+
+    const emailInputEl = document.createElement('input')
+    emailInputEl.setAttribute('type','email')
+    emailInputEl.setAttribute('name','email')
+    emailInputEl.setAttribute('id','email')
+    emailInputEl.setAttribute('class','input')
+    emailInputEl.classList.add('input-profile')
+    emailInputEl.setAttribute('required','true')
+
+    const passwordLabelEl = document.createElement('label')
+    passwordLabelEl.setAttribute('for','password')
+    passwordLabelEl.textContent = 'Password'
+
+    const passwordInputEl = document.createElement('input')
+    passwordInputEl.setAttribute('type','password')
+    passwordInputEl.setAttribute('name','password')
+    passwordInputEl.setAttribute('id','password')
+    passwordInputEl.setAttribute('class','input')
+    passwordInputEl.classList.add('input-profile')
+    passwordInputEl.setAttribute('required','true')
+
+    const signInButtonEl = document.createElement('button')
+    signInButtonEl.setAttribute('class','sign-in__button')
+    signInButtonEl.textContent = 'SIGN IN'
+
+    formEl.addEventListener('submit', function(event){
+        event.preventDefault()
+        
+        state.modal = ''
+
+        render()
+    })
+    mainEl.append(profileModalWrapperEl)
+    profileModalWrapperEl.append(profileModalEl)
+    profileModalEl.append(closeButtonEl,titleH2El, formEl)
+    formEl.append(emailLabelEl,emailInputEl,passwordLabelEl, passwordInputEl,signInButtonEl)
 }
 function renderMain() {
 
@@ -309,6 +383,7 @@ function renderMain() {
     mainEl.append(titleEl, ulListEl)
 
     if(state.modal === 'search') renderSearchModal(mainEl)
+    if(state.modal === 'profile') renderProfileModal(mainEl)
 }
 
 function renderFooter() {

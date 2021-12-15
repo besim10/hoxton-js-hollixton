@@ -113,7 +113,8 @@ main{
 .selected-product__title{
     font-weight: 800;
 }
-.selected-product__button{
+.selected-product__button,
+.sign-in__button{
     margin-top: 0.5rem;
     color: var(--white);
     background-color: var(--light-blue);
@@ -121,8 +122,9 @@ main{
     border: none;
     border-radius: 2rem;
     font-weight: bold;
+    cursor: pointer;
 }
-.modal.search-modal-wrapper{
+.modal-wrapper{
     position: fixed;
     background-color: rgba(0, 0, 0, 0.363);
     top: 70px;
@@ -133,7 +135,7 @@ main{
     display: grid;
     place-items: center;
 }
-.modal.search-modal{
+.modal-container{
     background-color: var(--white);
     padding: 2rem 3rem;
     border-radius: 0.5rem;
@@ -141,7 +143,7 @@ main{
     display: grid;
     gap: 1rem;
 }
-.search-modal__close-button{
+.modal__close-button{
     position: absolute;
     top: 5px;
     right: 5px;
@@ -150,15 +152,21 @@ main{
     border: none;
     cursor: pointer;
 }
-.search-modal__input{
+.input{
     width: 100%;
     border-radius: 1rem;
     border: 1px solid var(--light-blue);
     padding: 0.5rem;
     outline: none;
 }
-.search-modal__input:focus{
+.input:focus{
     border: 1px solid var(--light-blue);
+}
+
+.profile-form{
+    display: grid;
+    gap: 0.5rem;
+    grid-auto-flow: row;
 }
 footer{
     display: grid;
