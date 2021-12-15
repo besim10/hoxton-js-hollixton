@@ -66,12 +66,15 @@ main{
     grid-template-columns: repeat( auto-fit, minmax(300px,1fr));
     list-style: none;
     gap: 2rem;
+    justify-items: center;
 }
 .product-item{
     display: grid;
     gap: 0.2rem;
     position: relative;
     cursor: pointer;
+    width: 300px;
+    
 }
 .product-item__new{
     background-color: var(--light-blue);
@@ -118,6 +121,44 @@ main{
     border: none;
     border-radius: 2rem;
     font-weight: bold;
+}
+.modal.search-modal-wrapper{
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.363);
+    top: 70px;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(1px);
+    display: grid;
+    place-items: center;
+}
+.modal.search-modal{
+    background-color: var(--white);
+    padding: 2rem 3rem;
+    border-radius: 0.5rem;
+    position: relative;
+    display: grid;
+    gap: 1rem;
+}
+.search-modal__close-button{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.search-modal__input{
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid var(--light-blue);
+    padding: 0.5rem;
+    outline: none;
+}
+.search-modal__input:focus{
+    border: 1px solid var(--light-blue);
 }
 footer{
     display: grid;

@@ -2,7 +2,9 @@
 const state = {
     store: [],
     tab: '',
-    selectedProduct: []
+    selectedProduct: null,
+    search: '',
+    modal : ''
 }
 
 //server function
@@ -40,6 +42,7 @@ function getProductsToDisplay() {
         productsToDisplay = state.store.filter(product => product.discountedPrice)
     }
 
+    if(state.search !== '') productsToDisplay = productsToDisplay.filter(product => product.name.toUpperCase().includes(state.search))
 
     return productsToDisplay
 }
@@ -48,24 +51,32 @@ function listenToLeftMenuHeader(logoH1El, listItemGirls, listItemGuys, listItemS
     logoH1El.addEventListener('click', function (event) {
         event.preventDefault()
         state.tab = ''
+        state.search = ''
+        state.selectedProduct = null
         render()
     })
 
     listItemGirls.addEventListener('click', function (event) {
         event.preventDefault()
         state.tab = listItemGirls.textContent
+        state.selectedProduct = null
+        state.search = ''
         render()
     })
 
     listItemGuys.addEventListener('click', function (event) {
         event.preventDefault()
         state.tab = listItemGuys.textContent
+        state.selectedProduct = null
+        state.search = ''
         render()
     })
 
     listItemSale.addEventListener('click', function (event) {
         event.preventDefault()
         state.tab = listItemSale.textContent
+        state.selectedProduct = null
+        state.search = ''
         render()
     })
 }
@@ -109,6 +120,12 @@ function renderHeader() {
     const searchImg = document.createElement('img')
     searchImg.setAttribute('class', 'icons')
     searchImg.setAttribute('src', 'icons/search_icon.svg')
+    listItemSearch.addEventListener('click',function(){
+        state.modal = 'search'
+
+        render()
+    })
+
 
     const listItemProf = document.createElement('li')
     const personImg = document.createElement('img')
@@ -139,10 +156,10 @@ function renderStoreItem(product, ulListEl) {
     const listItem = document.createElement('li')
     listItem.setAttribute('class', 'product-item')
 
-    listItem.addEventListener('click',function(event){
+    listItem.addEventListener('click', function (event) {
         event.preventDefault()
-
-        state.selectedProduct.push(product)
+        
+        state.selectedProduct = product
 
         render()
     })
@@ -189,32 +206,82 @@ function renderSelectedProduct() {
 
     const mainEl = document.createElement('main')
     mainEl.setAttribute('class', 'main-selected-product')
-    for (const product of state.selectedProduct) {
-        
-        const imageEl = document.createElement('img')
-        imageEl.setAttribute('class', 'selected-product__image')
-        imageEl.setAttribute('src', product.image)
-        imageEl.setAttribute('alt', product.name)
 
-        const productInfoEl = document.createElement('div')
-        productInfoEl.setAttribute('class', 'selected-product__info')
-        const titleEl = document.createElement('h3')
-        titleEl.setAttribute('class', 'selected-product__title')
-        titleEl.textContent = product.name
 
-        const buttonEl = document.createElement('button')
-        buttonEl.setAttribute('class', 'selected-product__button')
-        buttonEl.textContent = 'ADD TO BAG'
+    const imageEl = document.createElement('img')
+    imageEl.setAttribute('class', 'selected-product__image')
+    imageEl.setAttribute('src', state.selectedProduct.image)
+    imageEl.setAttribute('alt', state.selectedProduct.name)
 
-        mainEl.append(imageEl, productInfoEl)
-        productInfoEl.append(titleEl, buttonEl)
-    }
+    const productInfoEl = document.createElement('div')
+    productInfoEl.setAttribute('class', 'selected-product__info')
+    const titleEl = document.createElement('h3')
+    titleEl.setAttribute('class', 'selected-product__title')
+    titleEl.textContent =state.selectedProduct.name
+
+    const buttonEl = document.createElement('button')
+    buttonEl.setAttribute('class', 'selected-product__button')
+    buttonEl.textContent = 'ADD TO BAG'
+
+    mainEl.append(imageEl, productInfoEl)
+    productInfoEl.append(titleEl, buttonEl)
+
     document.body.append(mainEl)
-    state.selectedProduct = []
+}
+function renderSearchModal(mainEl){
+
+    const searchModalWrapperEl = document.createElement('div')
+    searchModalWrapperEl.classList.add('modal')
+    searchModalWrapperEl.classList.add('search-modal-wrapper')
+    searchModalWrapperEl.addEventListener('click',function(){
+        state.modal = ''
+        render()
+    })
+
+    const searchModalEl = document.createElement('div')
+    searchModalEl.classList.add('modal')
+    searchModalEl.classList.add('search-modal')
+    searchModalEl.addEventListener('click',function(event){
+        event.stopPropagation()
+    })
+    
+    const closeButtonEl = document.createElement('button')
+    closeButtonEl.setAttribute('class','search-modal__close-button')
+    closeButtonEl.textContent = 'X'
+    closeButtonEl.addEventListener('click',function(){
+        state.modal = ''
+        render()
+    })
+
+    const titleH2El = document.createElement('h2')
+    titleH2El.textContent = 'Search for your favorite items!'
+
+    const formEl = document.createElement('form')
+    formEl.setAttribute('class','search-products-form')
+    
+    const inputEl = document.createElement('input')
+    inputEl.setAttribute('type','text')
+    inputEl.setAttribute('name','search')
+    inputEl.setAttribute('class','search-modal__input')
+    inputEl.setAttribute('placeholder','Search...')
+
+    formEl.addEventListener('submit', function(event){
+        event.preventDefault()
+
+        state.search = formEl.search.value.toUpperCase()
+        
+        state.modal = ''
+
+        render()
+    })
+    mainEl.append(searchModalWrapperEl)
+    searchModalWrapperEl.append(searchModalEl)
+    searchModalEl.append(closeButtonEl,titleH2El, formEl)
+    formEl.append(inputEl)
 }
 function renderMain() {
 
-    if (state.selectedProduct.length > 0) return  renderSelectedProduct()
+    if (state.selectedProduct !== null) return renderSelectedProduct()
 
     const mainEl = document.createElement('main')
 
@@ -240,6 +307,8 @@ function renderMain() {
     }
     document.body.append(mainEl)
     mainEl.append(titleEl, ulListEl)
+
+    if(state.modal === 'search') renderSearchModal(mainEl)
 }
 
 function renderFooter() {
